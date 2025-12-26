@@ -25,18 +25,44 @@
   ],
   "activationEvents": [
     "onCommand:htaccessTester.open",
-    "onCommand:htaccessTester.runFromEditor"
+    "onCommand:htaccessTester.runFromEditor",
+    "onView:htaccessTester.welcome"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "htaccessTester.open",
-        "title": "Htaccess Tester: Open"
+        "title": "Htaccess Tester: Open",
+        "icon": "$(server-process)"
       },
       {
         "command": "htaccessTester.runFromEditor",
-        "title": "Htaccess Tester: Test Current File"
+        "title": "Htaccess Tester: Test Current File",
+        "icon": "$(play)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "htaccess-tester",
+          "title": "Htaccess Tester",
+          "icon": "$(server-process)"
+        }
+      ]
+    },
+    "views": {
+      "htaccess-tester": [
+        {
+          "id": "htaccessTester.welcome",
+          "name": "Htaccess Tester"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "htaccessTester.welcome",
+        "contents": "Test Apache .htaccess rewrite rules.\n[Open Htaccess Tester](command:htaccessTester.open)\nYou can also right-click on any .htaccess file to test it."
       }
     ],
     "menus": {
