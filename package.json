@@ -84,11 +84,6 @@
     "configuration": {
       "title": "Htaccess Tester",
       "properties": {
-        "htaccessTester.apiBaseUrl": {
-          "type": "string",
-          "default": "https://htaccess.madewithlove.com/api",
-          "description": "Base URL for the htaccess testing API"
-        },
         "htaccessTester.requestTimeoutMs": {
           "type": "number",
           "default": 10000,

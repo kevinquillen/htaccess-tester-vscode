@@ -14,8 +14,9 @@ export class HtaccessApiError extends Error {
   }
 }
 
+const API_BASE_URL = 'https://htaccess.madewithlove.com/api';
+
 interface ClientConfig {
-  baseUrl: string;
   timeoutMs: number;
   maxRetries: number;
 }
@@ -23,7 +24,6 @@ interface ClientConfig {
 function getConfig(): ClientConfig {
   const config = vscode.workspace.getConfiguration('htaccessTester');
   return {
-    baseUrl: config.get<string>('apiBaseUrl', 'https://htaccess.madewithlove.com/api'),
     timeoutMs: config.get<number>('requestTimeoutMs', 10000),
     maxRetries: config.get<number>('maxRetryAttempts', 2)
   };
@@ -46,7 +46,7 @@ export async function testHtaccess(request: TestRequest): Promise<TestResult> {
 
   for (let attempt = 0; attempt <= config.maxRetries; attempt++) {
     try {
-      const result = await executeRequest(config.baseUrl, requestDto, config.timeoutMs);
+      const result = await executeRequest(API_BASE_URL, requestDto, config.timeoutMs);
       return result;
     } catch (error) {
       lastError = error as Error;
