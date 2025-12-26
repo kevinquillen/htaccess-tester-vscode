@@ -1,13 +1,7 @@
-/**
- * Validation result type
- */
 export type ValidationResult =
   | { valid: true }
   | { valid: false; message: string };
 
-/**
- * Validate a URL for htaccess testing
- */
 export function validateUrl(url: string): ValidationResult {
   if (!url || url.trim().length === 0) {
     return { valid: false, message: 'URL is required' };
@@ -27,9 +21,6 @@ export function validateUrl(url: string): ValidationResult {
   }
 }
 
-/**
- * Validate htaccess rules
- */
 export function validateRules(rules: string): ValidationResult {
   if (!rules || rules.trim().length === 0) {
     return { valid: false, message: 'Htaccess rules are required' };
@@ -38,9 +29,6 @@ export function validateRules(rules: string): ValidationResult {
   return { valid: true };
 }
 
-/**
- * Validate server variables
- */
 export function validateServerVariables(
   variables: Record<string, string>
 ): ValidationResult {
@@ -53,9 +41,6 @@ export function validateServerVariables(
   return { valid: true };
 }
 
-/**
- * Validate a complete test request
- */
 export function validateTestRequest(
   url: string,
   rules: string,

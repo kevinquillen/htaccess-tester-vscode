@@ -1,8 +1,5 @@
 import { ResultLine } from './ResultLine';
 
-/**
- * Statistics about the trace results
- */
 export interface TraceStats {
   total: number;
   met: number;
@@ -11,9 +8,6 @@ export interface TraceStats {
   notReached: number;
 }
 
-/**
- * Filter types for trace results
- */
 export enum TraceFilter {
   ALL = 'ALL',
   FAILED_ONLY = 'FAILED_ONLY',
@@ -21,9 +15,6 @@ export enum TraceFilter {
   MET_ONLY = 'MET_ONLY'
 }
 
-/**
- * Filter result lines based on the selected filter
- */
 export function filterLines(lines: ResultLine[], filter: TraceFilter): ResultLine[] {
   switch (filter) {
     case TraceFilter.ALL:
@@ -37,9 +28,6 @@ export function filterLines(lines: ResultLine[], filter: TraceFilter): ResultLin
   }
 }
 
-/**
- * Calculate statistics from result lines
- */
 export function calculateStats(lines: ResultLine[]): TraceStats {
   return {
     total: lines.length,

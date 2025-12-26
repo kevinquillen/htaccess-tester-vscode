@@ -3,9 +3,6 @@ import { TestRequest, TestResult } from '../domain/model';
 import { TestRequestDto, TestResponseDto, ErrorResponseDto } from './dto';
 import { mapResponseToResult } from './mapper';
 
-/**
- * Custom error for API-related failures
- */
 export class HtaccessApiError extends Error {
   constructor(
     message: string,
@@ -17,18 +14,12 @@ export class HtaccessApiError extends Error {
   }
 }
 
-/**
- * Configuration for the HTTP client
- */
 interface ClientConfig {
   baseUrl: string;
   timeoutMs: number;
   maxRetries: number;
 }
 
-/**
- * Gets configuration from VS Code settings
- */
 function getConfig(): ClientConfig {
   const config = vscode.workspace.getConfiguration('htaccessTester');
   return {
@@ -38,16 +29,10 @@ function getConfig(): ClientConfig {
   };
 }
 
-/**
- * Sleep for the specified duration
- */
 function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-/**
- * Test htaccess rules against a URL via the remote API
- */
 export async function testHtaccess(request: TestRequest): Promise<TestResult> {
   const config = getConfig();
 
@@ -71,7 +56,6 @@ export async function testHtaccess(request: TestRequest): Promise<TestResult> {
           throw error;
         }
 
-        // Exponential backoff with max 10s delay
         if (attempt < config.maxRetries) {
           const delay = Math.min(1000 * Math.pow(2, attempt), 10000);
           await sleep(delay);
@@ -85,9 +69,6 @@ export async function testHtaccess(request: TestRequest): Promise<TestResult> {
   throw lastError ?? new HtaccessApiError('Unknown error occurred');
 }
 
-/**
- * Execute a single API request
- */
 async function executeRequest(
   baseUrl: string,
   requestDto: TestRequestDto,
@@ -137,11 +118,7 @@ async function executeRequest(
   }
 }
 
-/**
- * Handle non-200 responses
- */
 function handleErrorResponse(status: number, rawResponse: string): never {
-  // Rate limiting
   if (status === 429) {
     throw new HtaccessApiError(
       'Rate limit exceeded. Please wait before making more requests.',
@@ -150,7 +127,6 @@ function handleErrorResponse(status: number, rawResponse: string): never {
     );
   }
 
-  // Server errors (retryable)
   if (status >= 500 && status < 600) {
     throw new HtaccessApiError(
       `Server error (${status}). Retrying...`,
@@ -159,7 +135,6 @@ function handleErrorResponse(status: number, rawResponse: string): never {
     );
   }
 
-  // Client errors
   try {
     const errorDto: ErrorResponseDto = JSON.parse(rawResponse);
     throw new HtaccessApiError(

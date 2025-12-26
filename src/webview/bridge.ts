@@ -1,9 +1,6 @@
-import { TestRequest, TestResult, TraceFilter } from '../domain/model';
+import { TestRequest, TestResult } from '../domain/model';
 import { SavedTestCase } from '../storage';
 
-/**
- * Message types sent from webview to extension
- */
 export type WebviewToExtensionMessage =
   | { type: 'runTest'; payload: TestRequest }
   | { type: 'loadFromEditor' }
@@ -14,9 +11,6 @@ export type WebviewToExtensionMessage =
   | { type: 'acknowledgeFirstRun' }
   | { type: 'ready' };
 
-/**
- * Message types sent from extension to webview
- */
 export type ExtensionToWebviewMessage =
   | { type: 'testResult'; payload: TestResult }
   | { type: 'testError'; payload: { message: string } }
@@ -26,9 +20,6 @@ export type ExtensionToWebviewMessage =
   | { type: 'showFirstRunNotice'; payload: { show: boolean } }
   | { type: 'notification'; payload: { message: string; type: 'info' | 'error' | 'success' } };
 
-/**
- * Validate a message from the webview
- */
 export function isValidWebviewMessage(message: unknown): message is WebviewToExtensionMessage {
   if (!message || typeof message !== 'object') {
     return false;

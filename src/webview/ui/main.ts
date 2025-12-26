@@ -1,6 +1,3 @@
-// Webview main script
-// This runs inside the webview context
-
 interface VsCodeApi {
   postMessage(message: unknown): void;
   getState(): unknown;
@@ -42,13 +39,11 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
 (function() {
   const vscode = acquireVsCodeApi();
 
-  // State
   let serverVariables: ServerVariable[] = [];
   let currentResult: TestResult | null = null;
   let currentFilter: TraceFilter = 'ALL';
   let savedTestCases: SavedTestCase[] = [];
 
-  // DOM elements
   const urlInput = document.getElementById('url-input') as HTMLInputElement;
   const rulesTextarea = document.getElementById('rules-textarea') as HTMLTextAreaElement;
   const variablesBody = document.getElementById('variables-body') as HTMLTableSectionElement;
@@ -78,7 +73,6 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
   const firstRunNotice = document.getElementById('first-run-notice') as HTMLDivElement;
   const acknowledgeBtn = document.getElementById('acknowledge-btn') as HTMLButtonElement;
 
-  // Initialize
   function init(): void {
     setupEventListeners();
     renderVariablesTable();
@@ -98,14 +92,12 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
     closeRawBtn.addEventListener('click', hideRawModal);
     acknowledgeBtn.addEventListener('click', acknowledgeFirstRun);
 
-    // Close modal on background click
     rawModal.addEventListener('click', (e) => {
       if (e.target === rawModal) {
         hideRawModal();
       }
     });
 
-    // Handle messages from extension
     window.addEventListener('message', handleMessage);
   }
 
@@ -136,7 +128,6 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
         }
         break;
       case 'notification':
-        // Could show a toast notification
         break;
     }
   }
@@ -212,7 +203,6 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
         <td><button class="remove-btn" data-index="${index}">Remove</button></td>
       `;
 
-      // Add event listeners
       const inputs = row.querySelectorAll('input');
       inputs.forEach(input => {
         input.addEventListener('input', (e) => {
@@ -233,7 +223,6 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
   }
 
   function saveTest(): void {
-    // Send request to extension to prompt for name via VS Code input box
     vscode.postMessage({
       type: 'promptSaveTestCase',
       payload: {
@@ -405,6 +394,5 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
     return div.innerHTML;
   }
 
-  // Initialize when DOM is ready
   init();
 })();

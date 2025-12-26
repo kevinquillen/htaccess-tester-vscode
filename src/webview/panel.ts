@@ -3,13 +3,10 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { HtaccessTestService } from '../domain/service';
 import { SavedTestsService } from '../storage';
-import { WebviewToExtensionMessage, ExtensionToWebviewMessage, isValidWebviewMessage } from './bridge';
+import { ExtensionToWebviewMessage, isValidWebviewMessage } from './bridge';
 
 const FIRST_RUN_KEY = 'htaccessTester.firstRunAcknowledged';
 
-/**
- * Manages the Htaccess Tester webview panel
- */
 export class HtaccessTesterPanel {
   public static currentPanel: HtaccessTesterPanel | undefined;
   public static readonly viewType = 'htaccessTester';
@@ -33,38 +30,26 @@ export class HtaccessTesterPanel {
     this.testService = new HtaccessTestService();
     this.savedTestsService = new SavedTestsService(context);
 
-    // Set the webview's HTML content
     this.panel.webview.html = this.getHtmlForWebview();
-
-    // Handle messages from the webview
     this.panel.webview.onDidReceiveMessage(
       message => this.handleMessage(message),
       null,
       this.disposables
     );
-
-    // Handle panel disposal
     this.panel.onDidDispose(() => this.dispose(), null, this.disposables);
   }
 
-  /**
-   * Create or show the panel
-   */
   public static createOrShow(
     extensionUri: vscode.Uri,
     context: vscode.ExtensionContext
   ): HtaccessTesterPanel {
-    const column = vscode.window.activeTextEditor
-      ? vscode.window.activeTextEditor.viewColumn
-      : undefined;
+    const column = vscode.window.activeTextEditor?.viewColumn;
 
-    // If panel exists, show it
     if (HtaccessTesterPanel.currentPanel) {
       HtaccessTesterPanel.currentPanel.panel.reveal(column);
       return HtaccessTesterPanel.currentPanel;
     }
 
-    // Create new panel
     const panel = vscode.window.createWebviewPanel(
       HtaccessTesterPanel.viewType,
       'Htaccess Tester',
@@ -83,25 +68,16 @@ export class HtaccessTesterPanel {
     return HtaccessTesterPanel.currentPanel;
   }
 
-  /**
-   * Load content from an .htaccess file
-   */
   public loadFromFile(content: string, filePath: string): void {
-    // Store for when webview is ready
     this.pendingEditorContent = { rules: content, filePath };
-
     this.postMessage({
       type: 'editorContent',
       payload: { rules: content, filePath }
     });
   }
 
-  /**
-   * Handle messages from the webview
-   */
   private async handleMessage(message: unknown): Promise<void> {
     if (!isValidWebviewMessage(message)) {
-      console.warn('Invalid message from webview:', message);
       return;
     }
 
@@ -109,51 +85,38 @@ export class HtaccessTesterPanel {
       case 'ready':
         await this.onWebviewReady();
         break;
-
       case 'runTest':
         await this.runTest(message.payload);
         break;
-
       case 'loadFromEditor':
         this.loadFromActiveEditor();
         break;
-
       case 'promptSaveTestCase':
         await this.promptAndSaveTestCase(message.payload);
         break;
-
       case 'loadTestCase':
         this.loadTestCase(message.payload.name);
         break;
-
       case 'deleteTestCase':
         await this.deleteTestCase(message.payload.name);
         break;
-
       case 'getSavedTestCases':
         this.sendSavedTestCases();
         break;
-
       case 'acknowledgeFirstRun':
         await this.context.globalState.update(FIRST_RUN_KEY, true);
         break;
     }
   }
 
-  /**
-   * Called when webview is ready
-   */
   private async onWebviewReady(): Promise<void> {
-    // Check if first run
     const acknowledged = this.context.globalState.get<boolean>(FIRST_RUN_KEY, false);
     if (!acknowledged) {
       this.postMessage({ type: 'showFirstRunNotice', payload: { show: true } });
     }
 
-    // Send saved test cases
     this.sendSavedTestCases();
 
-    // Send pending editor content if any
     if (this.pendingEditorContent) {
       this.postMessage({
         type: 'editorContent',
@@ -163,9 +126,6 @@ export class HtaccessTesterPanel {
     }
   }
 
-  /**
-   * Run a test
-   */
   private async runTest(payload: { url: string; rules: string; serverVariables: Record<string, string> }): Promise<void> {
     this.postMessage({ type: 'loading', payload: { isLoading: true } });
 
@@ -175,7 +135,6 @@ export class HtaccessTesterPanel {
         rules: payload.rules,
         serverVariables: payload.serverVariables
       });
-
       this.postMessage({ type: 'testResult', payload: result });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error occurred';
@@ -185,9 +144,6 @@ export class HtaccessTesterPanel {
     }
   }
 
-  /**
-   * Load content from the active editor
-   */
   private loadFromActiveEditor(): void {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
@@ -203,16 +159,12 @@ export class HtaccessTesterPanel {
       return;
     }
 
-    const content = document.getText();
     this.postMessage({
       type: 'editorContent',
-      payload: { rules: content, filePath: document.fileName }
+      payload: { rules: document.getText(), filePath: document.fileName }
     });
   }
 
-  /**
-   * Prompt for name and save a test case
-   */
   private async promptAndSaveTestCase(payload: { url: string; rules: string; serverVariables: Record<string, string> }): Promise<void> {
     const name = await vscode.window.showInputBox({
       prompt: 'Enter a name for this test case',
@@ -234,9 +186,6 @@ export class HtaccessTesterPanel {
     vscode.window.showInformationMessage(`Test case "${name}" saved`);
   }
 
-  /**
-   * Load a saved test case
-   */
   private loadTestCase(name: string): void {
     const testCase = this.savedTestsService.getTestCase(name);
     if (testCase) {
@@ -247,53 +196,35 @@ export class HtaccessTesterPanel {
     }
   }
 
-  /**
-   * Delete a saved test case
-   */
   private async deleteTestCase(name: string): Promise<void> {
     await this.savedTestsService.deleteTestCase(name);
     this.sendSavedTestCases();
     vscode.window.showInformationMessage(`Test case "${name}" deleted`);
   }
 
-  /**
-   * Send saved test cases to webview
-   */
   private sendSavedTestCases(): void {
     const cases = this.savedTestsService.getSavedTestCases();
     this.postMessage({ type: 'savedTestCases', payload: cases });
   }
 
-  /**
-   * Post a message to the webview
-   */
   private postMessage(message: ExtensionToWebviewMessage): void {
     this.panel.webview.postMessage(message);
   }
 
-  /**
-   * Generate HTML for the webview
-   */
   private getHtmlForWebview(): string {
     const webview = this.panel.webview;
 
-    // Get URIs for resources
     const stylesUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this.extensionUri, 'src', 'webview', 'ui', 'styles.css')
     );
-
     const scriptUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this.extensionUri, 'out', 'webview', 'ui', 'main.js')
     );
-
-    // Generate nonce for CSP
     const nonce = this.getNonce();
 
-    // Read HTML template
     const htmlPath = vscode.Uri.joinPath(this.extensionUri, 'src', 'webview', 'ui', 'index.html');
     let html = fs.readFileSync(htmlPath.fsPath, 'utf8');
 
-    // Replace placeholders
     html = html.replace(/\{\{cspSource\}\}/g, webview.cspSource);
     html = html.replace(/\{\{nonce\}\}/g, nonce);
     html = html.replace(/\{\{stylesUri\}\}/g, stylesUri.toString());
@@ -302,9 +233,6 @@ export class HtaccessTesterPanel {
     return html;
   }
 
-  /**
-   * Generate a nonce for CSP
-   */
   private getNonce(): string {
     let text = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -314,12 +242,8 @@ export class HtaccessTesterPanel {
     return text;
   }
 
-  /**
-   * Dispose of the panel
-   */
   public dispose(): void {
     HtaccessTesterPanel.currentPanel = undefined;
-
     this.panel.dispose();
 
     while (this.disposables.length) {
