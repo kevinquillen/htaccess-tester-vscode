@@ -1,0 +1,29 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# IntelliJ Platform cache
+.intellijPlatform/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Claude Code
+.claude/
+
+# Editor backups
+*~
+*.swp
+*.swo
+
+# Local environment
+.env
+.env.local
+
+# Plan files (development only)
+PLAN.md
+PLANS.md
