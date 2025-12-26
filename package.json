@@ -2,7 +2,7 @@
   "name": "htaccess-tester",
   "displayName": "Htaccess Tester",
   "description": "Test Apache .htaccess rewrite rules directly in VSCode",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "kevinquillen",
   "license": "MIT",
   "repository": {
