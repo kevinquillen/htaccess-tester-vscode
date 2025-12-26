@@ -23,7 +23,10 @@
     "mod_rewrite",
     "testing"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:htaccessTester.open",
+    "onCommand:htaccessTester.runFromEditor"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
