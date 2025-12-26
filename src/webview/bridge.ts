@@ -7,12 +7,10 @@ import { SavedTestCase } from '../storage';
 export type WebviewToExtensionMessage =
   | { type: 'runTest'; payload: TestRequest }
   | { type: 'loadFromEditor' }
-  | { type: 'saveTestCase'; payload: { name: string } & TestRequest }
+  | { type: 'promptSaveTestCase'; payload: TestRequest }
   | { type: 'loadTestCase'; payload: { name: string } }
   | { type: 'deleteTestCase'; payload: { name: string } }
   | { type: 'getSavedTestCases' }
-  | { type: 'shareTest'; payload: TestRequest }
-  | { type: 'copyToClipboard'; payload: { text: string } }
   | { type: 'acknowledgeFirstRun' }
   | { type: 'ready' };
 
@@ -25,7 +23,6 @@ export type ExtensionToWebviewMessage =
   | { type: 'loading'; payload: { isLoading: boolean } }
   | { type: 'editorContent'; payload: { rules: string; filePath: string } }
   | { type: 'savedTestCases'; payload: SavedTestCase[] }
-  | { type: 'shareLink'; payload: { url: string } }
   | { type: 'showFirstRunNotice'; payload: { show: boolean } }
   | { type: 'notification'; payload: { message: string; type: 'info' | 'error' | 'success' } };
 
@@ -42,12 +39,10 @@ export function isValidWebviewMessage(message: unknown): message is WebviewToExt
   const validTypes = [
     'runTest',
     'loadFromEditor',
-    'saveTestCase',
+    'promptSaveTestCase',
     'loadTestCase',
     'deleteTestCase',
     'getSavedTestCases',
-    'shareTest',
-    'copyToClipboard',
     'acknowledgeFirstRun',
     'ready'
   ];

@@ -70,7 +70,6 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
   const statsInvalid = document.getElementById('stats-invalid') as HTMLSpanElement;
   const statsNotReached = document.getElementById('stats-not-reached') as HTMLSpanElement;
   const rawOutputBtn = document.getElementById('raw-output-btn') as HTMLButtonElement;
-  const shareBtn = document.getElementById('share-btn') as HTMLButtonElement;
   const loadingOverlay = document.getElementById('loading-overlay') as HTMLDivElement;
   const errorMessage = document.getElementById('error-message') as HTMLDivElement;
   const rawModal = document.getElementById('raw-modal') as HTMLDivElement;
@@ -96,7 +95,6 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
     deleteTestBtn.addEventListener('click', deleteSelectedTest);
     filterSelect.addEventListener('change', onFilterChange);
     rawOutputBtn.addEventListener('click', showRawOutput);
-    shareBtn.addEventListener('click', shareTest);
     closeRawBtn.addEventListener('click', hideRawModal);
     acknowledgeBtn.addEventListener('click', acknowledgeFirstRun);
 
@@ -131,9 +129,6 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
       case 'savedTestCases':
         savedTestCases = message.payload;
         renderSavedTestsDropdown();
-        break;
-      case 'shareLink':
-        copyToClipboard(message.payload.url);
         break;
       case 'showFirstRunNotice':
         if (message.payload.show) {
@@ -238,13 +233,10 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
   }
 
   function saveTest(): void {
-    const name = prompt('Enter a name for this test case:');
-    if (!name) return;
-
+    // Send request to extension to prompt for name via VS Code input box
     vscode.postMessage({
-      type: 'saveTestCase',
+      type: 'promptSaveTestCase',
       payload: {
-        name,
         url: urlInput.value,
         rules: rulesTextarea.value,
         serverVariables: getServerVariablesMap()
@@ -319,7 +311,6 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
 
       row.innerHTML = `
         <td class="status-icon ${statusClass}">${statusIcon}</td>
-        <td class="rule-cell">${escapeHtml(line.line)}</td>
         <td class="message-cell">${line.message ? escapeHtml(line.message) : ''}</td>
         <td class="${line.isMet ? 'status-met' : 'status-not-met'}">${line.isMet ? 'Yes' : 'No'}</td>
         <td>${line.wasReached ? 'Yes' : 'No'}</td>
@@ -382,24 +373,6 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
 
   function hideRawModal(): void {
     rawModal.classList.remove('visible');
-  }
-
-  function shareTest(): void {
-    vscode.postMessage({
-      type: 'shareTest',
-      payload: {
-        url: urlInput.value,
-        rules: rulesTextarea.value,
-        serverVariables: getServerVariablesMap()
-      }
-    });
-  }
-
-  function copyToClipboard(text: string): void {
-    vscode.postMessage({
-      type: 'copyToClipboard',
-      payload: { text }
-    });
   }
 
   function acknowledgeFirstRun(): void {

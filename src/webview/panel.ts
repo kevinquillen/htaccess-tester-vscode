@@ -118,8 +118,8 @@ export class HtaccessTesterPanel {
         this.loadFromActiveEditor();
         break;
 
-      case 'saveTestCase':
-        await this.saveTestCase(message.payload);
+      case 'promptSaveTestCase':
+        await this.promptAndSaveTestCase(message.payload);
         break;
 
       case 'loadTestCase':
@@ -132,15 +132,6 @@ export class HtaccessTesterPanel {
 
       case 'getSavedTestCases':
         this.sendSavedTestCases();
-        break;
-
-      case 'shareTest':
-        await this.shareTest(message.payload);
-        break;
-
-      case 'copyToClipboard':
-        await vscode.env.clipboard.writeText(message.payload.text);
-        vscode.window.showInformationMessage('Copied to clipboard!');
         break;
 
       case 'acknowledgeFirstRun':
@@ -220,18 +211,27 @@ export class HtaccessTesterPanel {
   }
 
   /**
-   * Save a test case
+   * Prompt for name and save a test case
    */
-  private async saveTestCase(payload: { name: string; url: string; rules: string; serverVariables: Record<string, string> }): Promise<void> {
+  private async promptAndSaveTestCase(payload: { url: string; rules: string; serverVariables: Record<string, string> }): Promise<void> {
+    const name = await vscode.window.showInputBox({
+      prompt: 'Enter a name for this test case',
+      placeHolder: 'Test case name'
+    });
+
+    if (!name) {
+      return;
+    }
+
     await this.savedTestsService.saveTestCase({
-      name: payload.name,
+      name,
       url: payload.url,
       rules: payload.rules,
       serverVariables: payload.serverVariables
     });
 
     this.sendSavedTestCases();
-    vscode.window.showInformationMessage(`Test case "${payload.name}" saved`);
+    vscode.window.showInformationMessage(`Test case "${name}" saved`);
   }
 
   /**
@@ -262,30 +262,6 @@ export class HtaccessTesterPanel {
   private sendSavedTestCases(): void {
     const cases = this.savedTestsService.getSavedTestCases();
     this.postMessage({ type: 'savedTestCases', payload: cases });
-  }
-
-  /**
-   * Share a test (generate link)
-   */
-  private async shareTest(payload: { url: string; rules: string; serverVariables: Record<string, string> }): Promise<void> {
-    try {
-      // Create a shareable URL using the htaccess.madewithlove.com format
-      const params = new URLSearchParams();
-      params.set('url', payload.url);
-      params.set('htaccess', payload.rules);
-
-      // Add server variables
-      for (const [key, value] of Object.entries(payload.serverVariables)) {
-        params.set(`serverVariables[${key}]`, value);
-      }
-
-      const shareUrl = `https://htaccess.madewithlove.com/?${params.toString()}`;
-
-      await vscode.env.clipboard.writeText(shareUrl);
-      vscode.window.showInformationMessage('Share link copied to clipboard!');
-    } catch (error) {
-      vscode.window.showErrorMessage('Failed to generate share link');
-    }
   }
 
   /**
