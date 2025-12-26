@@ -13,18 +13,18 @@ export interface TestRequestDto {
 export interface ResultLineDto {
   line?: string | null;
   message?: string | null;
-  met?: boolean | null;
-  valid?: boolean | null;
-  reached?: boolean | null;
-  supported?: boolean | null;
+  isMet?: boolean | null;
+  isValid?: boolean | null;
+  wasReached?: boolean | null;
+  isSupported?: boolean | null;
 }
 
 /**
  * Response payload from the htaccess API
  */
 export interface TestResponseDto {
-  output_url?: string;
-  output_status_code?: number | null;
+  outputUrl?: string;
+  outputStatusCode?: number | null;
   lines?: ResultLineDto[];
 }
 
