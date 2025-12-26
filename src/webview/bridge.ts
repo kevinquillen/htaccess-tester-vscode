@@ -1,0 +1,56 @@
+import { TestRequest, TestResult, TraceFilter } from '../domain/model';
+import { SavedTestCase } from '../storage';
+
+/**
+ * Message types sent from webview to extension
+ */
+export type WebviewToExtensionMessage =
+  | { type: 'runTest'; payload: TestRequest }
+  | { type: 'loadFromEditor' }
+  | { type: 'saveTestCase'; payload: { name: string } & TestRequest }
+  | { type: 'loadTestCase'; payload: { name: string } }
+  | { type: 'deleteTestCase'; payload: { name: string } }
+  | { type: 'getSavedTestCases' }
+  | { type: 'shareTest'; payload: TestRequest }
+  | { type: 'copyToClipboard'; payload: { text: string } }
+  | { type: 'acknowledgeFirstRun' }
+  | { type: 'ready' };
+
+/**
+ * Message types sent from extension to webview
+ */
+export type ExtensionToWebviewMessage =
+  | { type: 'testResult'; payload: TestResult }
+  | { type: 'testError'; payload: { message: string } }
+  | { type: 'loading'; payload: { isLoading: boolean } }
+  | { type: 'editorContent'; payload: { rules: string; filePath: string } }
+  | { type: 'savedTestCases'; payload: SavedTestCase[] }
+  | { type: 'shareLink'; payload: { url: string } }
+  | { type: 'showFirstRunNotice'; payload: { show: boolean } }
+  | { type: 'notification'; payload: { message: string; type: 'info' | 'error' | 'success' } };
+
+/**
+ * Validate a message from the webview
+ */
+export function isValidWebviewMessage(message: unknown): message is WebviewToExtensionMessage {
+  if (!message || typeof message !== 'object') {
+    return false;
+  }
+
+  const msg = message as { type?: string };
+
+  const validTypes = [
+    'runTest',
+    'loadFromEditor',
+    'saveTestCase',
+    'loadTestCase',
+    'deleteTestCase',
+    'getSavedTestCases',
+    'shareTest',
+    'copyToClipboard',
+    'acknowledgeFirstRun',
+    'ready'
+  ];
+
+  return typeof msg.type === 'string' && validTypes.includes(msg.type);
+}

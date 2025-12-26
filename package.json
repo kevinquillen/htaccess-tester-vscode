@@ -1,0 +1,99 @@
+{
+  "name": "htaccess-tester",
+  "displayName": "Htaccess Tester",
+  "description": "Test Apache .htaccess rewrite rules directly in VSCode",
+  "version": "0.0.1",
+  "publisher": "kevinquillen",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kevinquillen/htaccess-tester-vscode"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Testing"
+  ],
+  "keywords": [
+    "htaccess",
+    "apache",
+    "rewrite",
+    "mod_rewrite",
+    "testing"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "htaccessTester.open",
+        "title": "Htaccess Tester: Open"
+      },
+      {
+        "command": "htaccessTester.runFromEditor",
+        "title": "Htaccess Tester: Test Current File"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "htaccessTester.runFromEditor",
+          "when": "resourceFilename == .htaccess",
+          "group": "htaccess"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "htaccessTester.runFromEditor",
+          "when": "resourceFilename == .htaccess",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Htaccess Tester",
+      "properties": {
+        "htaccessTester.apiBaseUrl": {
+          "type": "string",
+          "default": "https://htaccess.madewithlove.com/api",
+          "description": "Base URL for the htaccess testing API"
+        },
+        "htaccessTester.requestTimeoutMs": {
+          "type": "number",
+          "default": 10000,
+          "minimum": 1000,
+          "maximum": 60000,
+          "description": "Request timeout in milliseconds"
+        },
+        "htaccessTester.maxRetryAttempts": {
+          "type": "number",
+          "default": 2,
+          "minimum": 0,
+          "maximum": 5,
+          "description": "Maximum retry attempts for failed requests"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./ && tsc -p ./tsconfig.webview.json",
+    "compile:extension": "tsc -p ./",
+    "compile:webview": "tsc -p ./tsconfig.webview.json",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ignore-pattern 'src/webview/ui/**'",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "@vscode/test-electron": "^2.3.8",
+    "eslint": "^8.55.0",
+    "typescript": "^5.3.0"
+  }
+}

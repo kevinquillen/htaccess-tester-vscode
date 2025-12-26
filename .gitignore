@@ -1,9 +1,19 @@
+# Build output
+out/
+dist/
+*.vsix
+
+# Dependencies
+node_modules/
+
+# VS Code test environment
+.vscode-test/
+
 # IntelliJ IDEA
 .idea/
 *.iml
 *.ipr
 *.iws
-out/
 
 # IntelliJ Platform cache
 .intellijPlatform/
@@ -23,6 +33,10 @@ Thumbs.db
 # Local environment
 .env
 .env.local
+
+# Logs
+*.log
+npm-debug.log*
 
 # Plan files (development only)
 PLAN.md
