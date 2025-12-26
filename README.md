@@ -31,7 +31,6 @@ Or use the Command Palette: "Htaccess Tester: Test Current File"
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `htaccessTester.apiBaseUrl` | `https://htaccess.madewithlove.com/api` | Base URL for the testing API |
 | `htaccessTester.requestTimeoutMs` | `10000` | Request timeout in milliseconds |
 | `htaccessTester.maxRetryAttempts` | `2` | Maximum retry attempts for failed requests |
 
