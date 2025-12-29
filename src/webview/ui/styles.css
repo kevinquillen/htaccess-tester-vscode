@@ -136,34 +136,6 @@ button.secondary:hover {
   background-color: var(--vscode-errorForeground);
 }
 
-/* Results section */
-.results-header {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-}
-
-.result-item {
-  display: flex;
-  flex-direction: column;
-}
-
-.result-label {
-  font-size: 0.85em;
-  color: var(--vscode-descriptionForeground);
-  margin-bottom: 2px;
-}
-
-.result-value {
-  font-family: var(--vscode-editor-font-family);
-  font-weight: 600;
-}
-
-.result-value.status-code {
-  color: var(--vscode-charts-orange);
-}
-
 /* Trace table */
 .trace-controls {
   display: flex;

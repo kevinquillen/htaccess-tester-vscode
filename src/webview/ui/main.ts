@@ -56,8 +56,6 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
   const deleteTestBtn = document.getElementById('delete-test-btn') as HTMLButtonElement;
   const filterSelect = document.getElementById('filter-select') as HTMLSelectElement;
   const resultsSection = document.getElementById('results-section') as HTMLDivElement;
-  const outputUrl = document.getElementById('output-url') as HTMLSpanElement;
-  const outputStatus = document.getElementById('output-status') as HTMLSpanElement;
   const traceBody = document.getElementById('trace-body') as HTMLTableSectionElement;
   const statsTotal = document.getElementById('stats-total') as HTMLSpanElement;
   const statsMet = document.getElementById('stats-met') as HTMLSpanElement;
@@ -279,10 +277,6 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
     if (!currentResult) return;
 
     resultsSection.style.display = 'block';
-    outputUrl.textContent = currentResult.outputUrl || '(no change)';
-    outputStatus.textContent = currentResult.outputStatusCode?.toString() || '-';
-    outputStatus.className = currentResult.outputStatusCode ? 'result-value status-code' : 'result-value';
-
     renderTraceTable();
     updateStats();
   }

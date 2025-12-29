@@ -10,7 +10,6 @@ Test Apache .htaccess rewrite rules directly in VS Code using the [htaccess.made
 - Filter results (all, failed, reached, met)
 - Save and load test cases per workspace
 - Load rules directly from open .htaccess files
-- Share test cases via URL
 
 ## Usage
 
