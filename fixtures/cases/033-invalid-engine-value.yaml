@@ -1,0 +1,21 @@
+id: invalid-engine-value
+description: Invalid RewriteEngine value produces parse error
+url: "http://example.com/test"
+rules: |
+  RewriteEngine Maybe
+  RewriteRule ^test$ /bar [L]
+serverVariables:
+  SERVER_NAME: "example.com"
+  HTTP_HOST: "example.com"
+expected:
+  outputUrl: "http://example.com/test"
+  statusCode: null
+  trace:
+    - line: "RewriteEngine Maybe"
+      reached: true
+      met: false
+      valid: false
+    - line: "RewriteRule ^test$ /bar [L]"
+      reached: false
+      met: false
+      valid: true
