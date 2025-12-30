@@ -1,6 +1,6 @@
 # Htaccess Tester for VS Code
 
-Test Apache .htaccess rewrite rules directly in VS Code using the [htaccess.madewithlove.com](https://htaccess.madewithlove.com) API.
+Test Apache .htaccess rewrite rules directly in VS Code with a fully offline engine. No internet connection required.
 
 ## Features
 
@@ -10,6 +10,31 @@ Test Apache .htaccess rewrite rules directly in VS Code using the [htaccess.made
 - Filter results (all, failed, reached, met)
 - Save and load test cases per workspace
 - Load rules directly from open .htaccess files
+- **Offline evaluation** - no network required
+
+## Supported Directives
+
+- `RewriteEngine On/Off`
+- `RewriteBase`
+- `RewriteCond` with:
+  - Variable expansion (`%{HTTP_HOST}`, `%{REQUEST_URI}`, etc.)
+  - Pattern matching with regex
+  - Negation (`!`)
+  - Flags: `[NC]`, `[OR]`
+- `RewriteRule` with:
+  - Pattern matching with backreferences (`$1`, `$2`, etc.)
+  - Condition backreferences (`%1`, `%2`, etc.)
+  - Flags: `[L]`, `[R]`, `[R=301]`, `[NC]`, `[QSA]`, `[QSD]`, `[NE]`, `[END]`, `[F]`, `[G]`
+
+## Limitations
+
+Some Apache features are not supported in offline mode:
+
+- Filesystem tests (`-f`, `-d`, `-s`)
+- Proxy pass-through (`[P]`)
+- Environment variable setting (`[E=]`)
+- Cookie setting (`[CO=]`)
+- Some PCRE regex features not available in JavaScript
 
 ## Usage
 
@@ -30,17 +55,14 @@ Or use the Command Palette: "Htaccess Tester: Test Current File"
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `htaccessTester.requestTimeoutMs` | `10000` | Request timeout in milliseconds |
-| `htaccessTester.maxRetryAttempts` | `2` | Maximum retry attempts for failed requests |
-
-## Privacy Notice
-
-This extension sends your htaccess rules and test URLs to the htaccess.madewithlove.com API for evaluation. No data is permanently stored, but be aware that your test data is transmitted over the internet.
+| `htaccessTester.engine.maxIterations` | `100` | Maximum rule iterations (prevents infinite loops) |
+| `htaccessTester.engine.maxUrlLength` | `8192` | Maximum URL length in characters |
+| `htaccessTester.engine.maxRegexSubjectLength` | `2048` | Maximum length for regex matching |
+| `htaccessTester.engine.maxRuleCount` | `1000` | Maximum number of rules |
 
 ## Requirements
 
 - VS Code 1.85.0 or higher
-- Internet connection
 
 ## License
 

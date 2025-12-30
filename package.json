@@ -85,19 +85,33 @@
     "configuration": {
       "title": "Htaccess Tester",
       "properties": {
-        "htaccessTester.requestTimeoutMs": {
+        "htaccessTester.engine.maxIterations": {
           "type": "number",
-          "default": 10000,
-          "minimum": 1000,
-          "maximum": 60000,
-          "description": "Request timeout in milliseconds"
+          "default": 100,
+          "minimum": 1,
+          "maximum": 1000,
+          "description": "Maximum number of rule iterations (prevents infinite loops)"
         },
-        "htaccessTester.maxRetryAttempts": {
+        "htaccessTester.engine.maxUrlLength": {
           "type": "number",
-          "default": 2,
-          "minimum": 0,
-          "maximum": 5,
-          "description": "Maximum retry attempts for failed requests"
+          "default": 8192,
+          "minimum": 256,
+          "maximum": 65536,
+          "description": "Maximum URL length in characters"
+        },
+        "htaccessTester.engine.maxRegexSubjectLength": {
+          "type": "number",
+          "default": 2048,
+          "minimum": 128,
+          "maximum": 16384,
+          "description": "Maximum length of strings matched against regex patterns"
+        },
+        "htaccessTester.engine.maxRuleCount": {
+          "type": "number",
+          "default": 1000,
+          "minimum": 10,
+          "maximum": 10000,
+          "description": "Maximum number of rules in htaccess file"
         }
       }
     }
