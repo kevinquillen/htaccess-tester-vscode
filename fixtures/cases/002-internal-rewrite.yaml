@@ -1,0 +1,21 @@
+id: internal-rewrite
+description: Internal rewrite without redirect
+url: "http://example.com/old-page"
+rules: |
+  RewriteEngine On
+  RewriteRule ^old-page$ /new-page [L]
+serverVariables:
+  SERVER_NAME: "example.com"
+  HTTP_HOST: "example.com"
+expected:
+  outputUrl: "http://example.com/new-page"
+  statusCode: null
+  trace:
+    - line: "RewriteEngine On"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^old-page$ /new-page [L]"
+      reached: true
+      met: true
+      valid: true

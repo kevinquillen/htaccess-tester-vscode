@@ -5,8 +5,6 @@ import { HtaccessTestService } from '../domain/service';
 import { SavedTestsService } from '../storage';
 import { ExtensionToWebviewMessage, isValidWebviewMessage } from './bridge';
 
-const FIRST_RUN_KEY = 'htaccessTester.firstRunAcknowledged';
-
 export class HtaccessTesterPanel {
   public static currentPanel: HtaccessTesterPanel | undefined;
   public static readonly viewType = 'htaccessTester';
@@ -103,18 +101,10 @@ export class HtaccessTesterPanel {
       case 'getSavedTestCases':
         this.sendSavedTestCases();
         break;
-      case 'acknowledgeFirstRun':
-        await this.context.globalState.update(FIRST_RUN_KEY, true);
-        break;
     }
   }
 
   private async onWebviewReady(): Promise<void> {
-    const acknowledged = this.context.globalState.get<boolean>(FIRST_RUN_KEY, false);
-    if (!acknowledged) {
-      this.postMessage({ type: 'showFirstRunNotice', payload: { show: true } });
-    }
-
     this.sendSavedTestCases();
 
     if (this.pendingEditorContent) {

@@ -1,0 +1,26 @@
+id: negated-cond
+description: Negated condition with !
+url: "http://example.com/page"
+rules: |
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} !^www\.
+  RewriteRule ^(.*)$ http://www.example.com/$1 [R=301,L]
+serverVariables:
+  SERVER_NAME: "example.com"
+  HTTP_HOST: "example.com"
+expected:
+  outputUrl: "http://www.example.com/page"
+  statusCode: 301
+  trace:
+    - line: "RewriteEngine On"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteCond %{HTTP_HOST} !^www\\."
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^(.*)$ http://www.example.com/$1 [R=301,L]"
+      reached: true
+      met: true
+      valid: true

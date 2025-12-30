@@ -1,0 +1,21 @@
+id: comments-only
+description: Only comments in htaccess
+url: "http://example.com/page"
+rules: |
+  # This is a comment
+  # Another comment
+serverVariables:
+  SERVER_NAME: "example.com"
+  HTTP_HOST: "example.com"
+expected:
+  outputUrl: "http://example.com/page"
+  statusCode: null
+  trace:
+    - line: "# This is a comment"
+      reached: true
+      met: true
+      valid: true
+    - line: "# Another comment"
+      reached: true
+      met: true
+      valid: true

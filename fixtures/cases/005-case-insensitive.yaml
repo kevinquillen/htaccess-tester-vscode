@@ -1,0 +1,21 @@
+id: case-insensitive-nc
+description: Case insensitive match with NC flag
+url: "http://example.com/FOO"
+rules: |
+  RewriteEngine On
+  RewriteRule ^foo$ /bar [R=301,L,NC]
+serverVariables:
+  SERVER_NAME: "example.com"
+  HTTP_HOST: "example.com"
+expected:
+  outputUrl: "http://example.com/bar"
+  statusCode: 301
+  trace:
+    - line: "RewriteEngine On"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^foo$ /bar [R=301,L,NC]"
+      reached: true
+      met: true
+      valid: true

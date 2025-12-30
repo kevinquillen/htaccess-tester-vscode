@@ -1,0 +1,26 @@
+id: unsupported-directive
+description: Unsupported directive is reported
+url: "http://example.com/test"
+rules: |
+  RewriteEngine On
+  ErrorDocument 404 /404.html
+  RewriteRule ^test$ /bar [L]
+serverVariables:
+  SERVER_NAME: "example.com"
+  HTTP_HOST: "example.com"
+expected:
+  outputUrl: "http://example.com/bar"
+  statusCode: null
+  trace:
+    - line: "RewriteEngine On"
+      reached: true
+      met: true
+      valid: true
+    - line: "ErrorDocument 404 /404.html"
+      reached: true
+      met: false
+      valid: true
+    - line: "RewriteRule ^test$ /bar [L]"
+      reached: true
+      met: true
+      valid: true

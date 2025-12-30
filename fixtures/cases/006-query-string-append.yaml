@@ -1,0 +1,21 @@
+id: qsa-append
+description: Query string append with QSA flag
+url: "http://example.com/page?existing=1"
+rules: |
+  RewriteEngine On
+  RewriteRule ^page$ /newpage?new=2 [R=302,L,QSA]
+serverVariables:
+  SERVER_NAME: "example.com"
+  HTTP_HOST: "example.com"
+expected:
+  outputUrl: "http://example.com/newpage?new=2&existing=1"
+  statusCode: 302
+  trace:
+    - line: "RewriteEngine On"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^page$ /newpage?new=2 [R=302,L,QSA]"
+      reached: true
+      met: true
+      valid: true

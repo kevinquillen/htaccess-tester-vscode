@@ -1,0 +1,26 @@
+id: non-www-redirect
+description: Redirect www to non-www
+url: "http://www.example.com/page"
+rules: |
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+serverVariables:
+  SERVER_NAME: "www.example.com"
+  HTTP_HOST: "www.example.com"
+expected:
+  outputUrl: "http://example.com/page"
+  statusCode: 301
+  trace:
+    - line: "RewriteEngine On"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteCond %{HTTP_HOST} ^www\\.(.+)$ [NC]"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^(.*)$ http://%1/$1 [R=301,L]"
+      reached: true
+      met: true
+      valid: true

@@ -68,8 +68,6 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
   const rawModal = document.getElementById('raw-modal') as HTMLDivElement;
   const rawContent = document.getElementById('raw-content') as HTMLPreElement;
   const closeRawBtn = document.getElementById('close-raw-btn') as HTMLButtonElement;
-  const firstRunNotice = document.getElementById('first-run-notice') as HTMLDivElement;
-  const acknowledgeBtn = document.getElementById('acknowledge-btn') as HTMLButtonElement;
 
   function init(): void {
     setupEventListeners();
@@ -88,7 +86,6 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
     filterSelect.addEventListener('change', onFilterChange);
     rawOutputBtn.addEventListener('click', showRawOutput);
     closeRawBtn.addEventListener('click', hideRawModal);
-    acknowledgeBtn.addEventListener('click', acknowledgeFirstRun);
 
     rawModal.addEventListener('click', (e) => {
       if (e.target === rawModal) {
@@ -119,11 +116,6 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
       case 'savedTestCases':
         savedTestCases = message.payload;
         renderSavedTestsDropdown();
-        break;
-      case 'showFirstRunNotice':
-        if (message.payload.show) {
-          firstRunNotice.classList.add('visible');
-        }
         break;
       case 'notification':
         break;
@@ -292,9 +284,18 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
       const statusIcon = getStatusIcon(line);
       const statusClass = getStatusClass(line);
 
+      // Apply row-level styling based on status
+      if (!line.isValid) {
+        row.classList.add('row-invalid');
+      } else if (!line.wasReached) {
+        row.classList.add('row-not-reached');
+      } else if (!line.isMet) {
+        row.classList.add('row-not-met');
+      }
+
       row.innerHTML = `
         <td class="status-icon ${statusClass}">${statusIcon}</td>
-        <td class="message-cell">${line.message ? escapeHtml(line.message) : ''}</td>
+        <td class="line-cell">${escapeHtml(line.line)}${line.message ? ' <span class="line-message">(' + escapeHtml(line.message) + ')</span>' : ''}</td>
         <td class="${line.isMet ? 'status-met' : 'status-not-met'}">${line.isMet ? 'Yes' : 'No'}</td>
         <td>${line.wasReached ? 'Yes' : 'No'}</td>
       `;
@@ -356,11 +357,6 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
 
   function hideRawModal(): void {
     rawModal.classList.remove('visible');
-  }
-
-  function acknowledgeFirstRun(): void {
-    firstRunNotice.classList.remove('visible');
-    vscode.postMessage({ type: 'acknowledgeFirstRun' });
   }
 
   function setLoading(isLoading: boolean): void {

@@ -1,0 +1,21 @@
+id: redirect-default
+description: R flag without code defaults to 302
+url: "http://example.com/old"
+rules: |
+  RewriteEngine On
+  RewriteRule ^old$ /new [R,L]
+serverVariables:
+  SERVER_NAME: "example.com"
+  HTTP_HOST: "example.com"
+expected:
+  outputUrl: "http://example.com/new"
+  statusCode: 302
+  trace:
+    - line: "RewriteEngine On"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^old$ /new [R,L]"
+      reached: true
+      met: true
+      valid: true

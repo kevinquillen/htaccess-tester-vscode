@@ -2,7 +2,7 @@
   "name": "htaccess-tester",
   "displayName": "Htaccess Tester",
   "description": "Test Apache .htaccess rewrite rules directly in VSCode",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "publisher": "kevinquillen",
   "license": "MIT",
   "repository": {
@@ -85,19 +85,33 @@
     "configuration": {
       "title": "Htaccess Tester",
       "properties": {
-        "htaccessTester.requestTimeoutMs": {
+        "htaccessTester.engine.maxIterations": {
           "type": "number",
-          "default": 10000,
-          "minimum": 1000,
-          "maximum": 60000,
-          "description": "Request timeout in milliseconds"
+          "default": 100,
+          "minimum": 1,
+          "maximum": 1000,
+          "description": "Maximum number of rule iterations (prevents infinite loops)"
         },
-        "htaccessTester.maxRetryAttempts": {
+        "htaccessTester.engine.maxUrlLength": {
           "type": "number",
-          "default": 2,
-          "minimum": 0,
-          "maximum": 5,
-          "description": "Maximum retry attempts for failed requests"
+          "default": 8192,
+          "minimum": 256,
+          "maximum": 65536,
+          "description": "Maximum URL length in characters"
+        },
+        "htaccessTester.engine.maxRegexSubjectLength": {
+          "type": "number",
+          "default": 2048,
+          "minimum": 128,
+          "maximum": 16384,
+          "description": "Maximum length of strings matched against regex patterns"
+        },
+        "htaccessTester.engine.maxRuleCount": {
+          "type": "number",
+          "default": 1000,
+          "minimum": 10,
+          "maximum": 10000,
+          "description": "Maximum number of rules in htaccess file"
         }
       }
     }
@@ -110,7 +124,9 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ignore-pattern 'src/webview/ui/**'",
-    "test": "node ./out/test/runTest.js"
+    "test": "vitest run",
+    "test:engine": "vitest run",
+    "test:engine:watch": "vitest"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
@@ -119,6 +135,8 @@
     "@typescript-eslint/parser": "^6.13.0",
     "@vscode/test-electron": "^2.3.8",
     "eslint": "^8.55.0",
-    "typescript": "^5.3.0"
+    "typescript": "^5.3.0",
+    "vitest": "^2.1.0",
+    "yaml": "^2.6.0"
   }
 }

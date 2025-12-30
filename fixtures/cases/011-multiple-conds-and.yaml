@@ -1,0 +1,32 @@
+id: multiple-conds-and
+description: Multiple RewriteCond with AND (default)
+url: "http://www.example.com/secure/page"
+rules: |
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^www\.example\.com$
+  RewriteCond %{REQUEST_URI} ^/secure/
+  RewriteRule ^(.*)$ https://example.com/$1 [R=301,L]
+serverVariables:
+  SERVER_NAME: "www.example.com"
+  HTTP_HOST: "www.example.com"
+  REQUEST_URI: "/secure/page"
+expected:
+  outputUrl: "https://example.com/secure/page"
+  statusCode: 301
+  trace:
+    - line: "RewriteEngine On"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteCond %{HTTP_HOST} ^www\\.example\\.com$"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteCond %{REQUEST_URI} ^/secure/"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^(.*)$ https://example.com/$1 [R=301,L]"
+      reached: true
+      met: true
+      valid: true

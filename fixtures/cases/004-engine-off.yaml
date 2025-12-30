@@ -1,0 +1,21 @@
+id: engine-off
+description: RewriteEngine Off - rules ignored
+url: "http://example.com/foo"
+rules: |
+  RewriteEngine Off
+  RewriteRule ^foo$ /bar [R=301,L]
+serverVariables:
+  SERVER_NAME: "example.com"
+  HTTP_HOST: "example.com"
+expected:
+  outputUrl: "http://example.com/foo"
+  statusCode: null
+  trace:
+    - line: "RewriteEngine Off"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^foo$ /bar [R=301,L]"
+      reached: false
+      met: false
+      valid: true

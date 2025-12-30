@@ -8,7 +8,6 @@ export type WebviewToExtensionMessage =
   | { type: 'loadTestCase'; payload: { name: string } }
   | { type: 'deleteTestCase'; payload: { name: string } }
   | { type: 'getSavedTestCases' }
-  | { type: 'acknowledgeFirstRun' }
   | { type: 'ready' };
 
 export type ExtensionToWebviewMessage =
@@ -17,7 +16,6 @@ export type ExtensionToWebviewMessage =
   | { type: 'loading'; payload: { isLoading: boolean } }
   | { type: 'editorContent'; payload: { rules: string; filePath: string } }
   | { type: 'savedTestCases'; payload: SavedTestCase[] }
-  | { type: 'showFirstRunNotice'; payload: { show: boolean } }
   | { type: 'notification'; payload: { message: string; type: 'info' | 'error' | 'success' } };
 
 export function isValidWebviewMessage(message: unknown): message is WebviewToExtensionMessage {
@@ -34,7 +32,6 @@ export function isValidWebviewMessage(message: unknown): message is WebviewToExt
     'loadTestCase',
     'deleteTestCase',
     'getSavedTestCases',
-    'acknowledgeFirstRun',
     'ready'
   ];
 

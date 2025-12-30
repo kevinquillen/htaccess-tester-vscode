@@ -1,0 +1,26 @@
+id: end-flag
+description: END flag stops all processing
+url: "http://example.com/test"
+rules: |
+  RewriteEngine On
+  RewriteRule ^test$ /ended [END]
+  RewriteRule ^ended$ /next [L]
+serverVariables:
+  SERVER_NAME: "example.com"
+  HTTP_HOST: "example.com"
+expected:
+  outputUrl: "http://example.com/ended"
+  statusCode: null
+  trace:
+    - line: "RewriteEngine On"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^test$ /ended [END]"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^ended$ /next [L]"
+      reached: false
+      met: false
+      valid: true

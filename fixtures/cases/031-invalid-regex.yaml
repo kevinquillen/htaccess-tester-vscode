@@ -1,0 +1,21 @@
+id: invalid-regex
+description: Invalid regex pattern produces error
+url: "http://example.com/test"
+rules: |
+  RewriteEngine On
+  RewriteRule ^[invalid /bar [L]
+serverVariables:
+  SERVER_NAME: "example.com"
+  HTTP_HOST: "example.com"
+expected:
+  outputUrl: "http://example.com/test"
+  statusCode: null
+  trace:
+    - line: "RewriteEngine On"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^[invalid /bar [L]"
+      reached: true
+      met: false
+      valid: false
