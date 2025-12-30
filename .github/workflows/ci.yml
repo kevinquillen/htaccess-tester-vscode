@@ -2,78 +2,53 @@ name: CI
 
 on:
   push:
-    branches: [main, feature/*]
   pull_request:
-    branches: [main]
-
+  workflow_dispatch:
 jobs:
-  # Fast engine-only tests (runs first)
   engine-tests:
     name: Engine Tests
     runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
-          cache: 'npm'
-
-      - run: npm ci
-
-      - name: Run engine tests
-        run: npm run test:engine
-
-  # Full build and lint
-  build:
-    name: Build & Lint
-    runs-on: ubuntu-latest
-    needs: engine-tests
-
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
-
+        node-version: [ 18.x, 20.x, 22.x]
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-
       - run: npm ci
-
-      - name: Run linter
-        run: npm run lint
-
-      - name: Compile extension
-        run: npm run compile
-
-      - name: Package extension
-        run: npx @vscode/vsce package --no-dependencies
-        continue-on-error: true
-
-  # VS Code integration tests
-  vscode-tests:
-    name: VS Code Integration Tests
+      - name: Run engine tests
+        run: npm run test:engine
+  build:
+    name: Build & Lint
     runs-on: ubuntu-latest
-    needs: build
-
+    needs: engine-tests
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
     steps:
       - uses: actions/checkout@v4
-
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - name: Run linter
+        run: npm run lint
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20.x
           cache: 'npm'
-
       - run: npm ci
-
       - name: Compile extension
         run: npm run compile
-
       - name: Run VS Code tests
         uses: coactions/setup-xvfb@v1
         with:

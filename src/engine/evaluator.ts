@@ -4,9 +4,6 @@
 
 import {
   AstNode,
-  HtaccessDocument,
-  RewriteEngineDirective,
-  RewriteBaseDirective,
   RewriteCondDirective,
   RewriteRuleDirective,
   RuleFlags
@@ -55,7 +52,7 @@ function parseUrl(url: string): { scheme: string; host: string; path: string; qu
     };
   } catch {
     // Fallback for malformed URLs
-    const match = url.match(/^(https?):\/\/([^\/]+)(\/[^?]*)?(\?.*)?$/);
+    const match = url.match(/^(https?):\/\/([^/]+)(\/[^?]*)?(\?.*)?$/);
     if (match) {
       return {
         scheme: match[1],

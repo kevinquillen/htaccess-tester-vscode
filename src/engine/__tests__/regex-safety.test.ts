@@ -9,7 +9,6 @@ import {
   createSafeRegex,
   checkPcreCompatibility
 } from '../regex-safety';
-import { DEFAULT_ENGINE_CONFIG } from '../../shared/types';
 
 describe('Regex Safety', () => {
   describe('checkPatternSafety', () => {

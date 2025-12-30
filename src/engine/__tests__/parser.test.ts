@@ -9,7 +9,6 @@ import {
   RewriteBaseDirective,
   RewriteCondDirective,
   RewriteRuleDirective,
-  BlankLineNode,
   CommentNode,
   UnknownDirective,
   ParseErrorNode

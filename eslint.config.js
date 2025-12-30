@@ -14,6 +14,16 @@ module.exports = [
       parserOptions: {
         ecmaVersion: 2022,
         sourceType: 'module'
+      },
+      globals: {
+        __dirname: 'readonly',
+        URL: 'readonly',
+        console: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        fetch: 'readonly',
+        AbortController: 'readonly',
+        confirm: 'readonly'
       }
     },
     plugins: {

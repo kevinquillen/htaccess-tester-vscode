@@ -32,7 +32,7 @@ export function validateRules(rules: string): ValidationResult {
 export function validateServerVariables(
   variables: Record<string, string>
 ): ValidationResult {
-  for (const [key, value] of Object.entries(variables)) {
+  for (const [key] of Object.entries(variables)) {
     if (!key || key.trim().length === 0) {
       return { valid: false, message: 'Server variable names cannot be empty' };
     }
