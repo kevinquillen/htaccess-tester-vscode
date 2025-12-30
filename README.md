@@ -1,6 +1,6 @@
 # Htaccess Tester for VS Code
 
-Test Apache .htaccess rewrite rules directly in VS Code with a fully offline engine. No internet connection required.
+Test Apache .htaccess rewrite rules directly in VS Code. No internet connection required.
 
 ## Features
 
