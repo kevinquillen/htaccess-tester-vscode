@@ -124,7 +124,7 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ignore-pattern 'src/webview/ui/**'",
-    "test": "node ./out/test/runTest.js",
+    "test": "vitest run",
     "test:engine": "vitest run",
     "test:engine:watch": "vitest"
   },
