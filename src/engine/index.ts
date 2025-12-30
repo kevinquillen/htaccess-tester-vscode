@@ -7,24 +7,11 @@ export * from './ast';
 export * from './parser';
 export * from '../shared/types';
 
-import { EngineInput, EngineOutput, EngineConfig, DEFAULT_ENGINE_CONFIG } from '../shared/types';
+// Re-export evaluate from evaluator
+export { evaluate } from './evaluator';
 
-/**
- * Main entry point for evaluating htaccess rules.
- * This function will be implemented in Stage 4.
- */
-export function evaluate(
-  input: EngineInput,
-  config: EngineConfig = DEFAULT_ENGINE_CONFIG
-): EngineOutput {
-  // Placeholder - will be implemented in Stage 4
-  return {
-    finalUrl: input.url,
-    status: 'ok',
-    statusCode: null,
-    trace: []
-  };
-}
+import { evaluate as evaluateImpl } from './evaluator';
+import { EngineInput, EngineOutput, EngineConfig, DEFAULT_ENGINE_CONFIG } from '../shared/types';
 
 /**
  * HtaccessEngine class interface (for consumers who prefer OOP style)
@@ -41,7 +28,7 @@ export function createEngine(config: Partial<EngineConfig> = {}): HtaccessEngine
 
   return {
     evaluate(input: EngineInput): EngineOutput {
-      return evaluate(input, fullConfig);
+      return evaluateImpl(input, fullConfig);
     }
   };
 }
