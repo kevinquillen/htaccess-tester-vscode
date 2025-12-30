@@ -68,8 +68,6 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
   const rawModal = document.getElementById('raw-modal') as HTMLDivElement;
   const rawContent = document.getElementById('raw-content') as HTMLPreElement;
   const closeRawBtn = document.getElementById('close-raw-btn') as HTMLButtonElement;
-  const firstRunNotice = document.getElementById('first-run-notice') as HTMLDivElement;
-  const acknowledgeBtn = document.getElementById('acknowledge-btn') as HTMLButtonElement;
 
   function init(): void {
     setupEventListeners();
@@ -88,7 +86,6 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
     filterSelect.addEventListener('change', onFilterChange);
     rawOutputBtn.addEventListener('click', showRawOutput);
     closeRawBtn.addEventListener('click', hideRawModal);
-    acknowledgeBtn.addEventListener('click', acknowledgeFirstRun);
 
     rawModal.addEventListener('click', (e) => {
       if (e.target === rawModal) {
@@ -119,11 +116,6 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
       case 'savedTestCases':
         savedTestCases = message.payload;
         renderSavedTestsDropdown();
-        break;
-      case 'showFirstRunNotice':
-        if (message.payload.show) {
-          firstRunNotice.classList.add('visible');
-        }
         break;
       case 'notification':
         break;
@@ -356,11 +348,6 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
 
   function hideRawModal(): void {
     rawModal.classList.remove('visible');
-  }
-
-  function acknowledgeFirstRun(): void {
-    firstRunNotice.classList.remove('visible');
-    vscode.postMessage({ type: 'acknowledgeFirstRun' });
   }
 
   function setLoading(isLoading: boolean): void {

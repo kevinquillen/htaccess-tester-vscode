@@ -8,18 +8,6 @@
   <title>Htaccess Tester</title>
 </head>
 <body>
-  <!-- First Run Notice -->
-  <div id="first-run-notice" class="first-run-notice">
-    <div class="notice-content">
-      <h3>Remote Execution Notice</h3>
-      <p>This extension tests your .htaccess rules using the <strong>htaccess.madewithlove.com</strong> API.</p>
-      <p>Your htaccess rules and test URLs will be sent to a remote server for evaluation. No data is stored permanently.</p>
-      <p>By using this extension, you acknowledge that your test data will be transmitted over the internet.</p>
-      <div class="button-group">
-        <button id="acknowledge-btn">I Understand</button>
-      </div>
-    </div>
-  </div>
 
   <!-- Loading Overlay -->
   <div id="loading-overlay" class="loading-overlay">
@@ -137,7 +125,7 @@ RewriteRule ^old-page$ /new-page [R=301,L]"></textarea>
   <div id="raw-modal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>Raw API Response</h3>
+        <h3>Raw Output</h3>
         <button id="close-raw-btn" class="secondary">Close</button>
       </div>
       <pre id="raw-content"></pre>
