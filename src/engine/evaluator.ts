@@ -81,10 +81,18 @@ function initState(input: EngineInput): EvalState {
   const { scheme, host, path, query } = parseUrl(input.url);
 
   // Build environment with server variables
+  // Auto-populate common variables from the URL, then overlay user-provided ones
   const env: Record<string, string> = {
-    ...input.serverVariables,
+    HTTP_HOST: host,
+    SERVER_NAME: host,
+    REQUEST_SCHEME: scheme,
+    HTTPS: scheme === 'https' ? 'on' : '',
+    SERVER_PORT: scheme === 'https' ? '443' : '80',
+    REQUEST_METHOD: 'GET',
     REQUEST_URI: '/' + path + (query ? '?' + query : ''),
-    QUERY_STRING: query
+    QUERY_STRING: query,
+    // User-provided variables override auto-populated ones
+    ...input.serverVariables
   };
 
   return {
@@ -101,7 +109,7 @@ function initState(input: EngineInput): EvalState {
     redirect: null,
     iterations: 0,
     rewriteBase: '/',
-    engineEnabled: false
+    engineEnabled: true
   };
 }
 

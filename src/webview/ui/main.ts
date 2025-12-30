@@ -284,9 +284,18 @@ type TraceFilter = 'ALL' | 'FAILED_ONLY' | 'REACHED_ONLY' | 'MET_ONLY';
       const statusIcon = getStatusIcon(line);
       const statusClass = getStatusClass(line);
 
+      // Apply row-level styling based on status
+      if (!line.isValid) {
+        row.classList.add('row-invalid');
+      } else if (!line.wasReached) {
+        row.classList.add('row-not-reached');
+      } else if (!line.isMet) {
+        row.classList.add('row-not-met');
+      }
+
       row.innerHTML = `
         <td class="status-icon ${statusClass}">${statusIcon}</td>
-        <td class="message-cell">${line.message ? escapeHtml(line.message) : ''}</td>
+        <td class="line-cell">${escapeHtml(line.line)}${line.message ? ' <span class="line-message">(' + escapeHtml(line.message) + ')</span>' : ''}</td>
         <td class="${line.isMet ? 'status-met' : 'status-not-met'}">${line.isMet ? 'Yes' : 'No'}</td>
         <td>${line.wasReached ? 'Yes' : 'No'}</td>
       `;

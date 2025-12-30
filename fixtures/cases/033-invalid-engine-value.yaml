@@ -1,5 +1,5 @@
 id: invalid-engine-value
-description: Invalid RewriteEngine value produces parse error
+description: Invalid RewriteEngine value produces parse error but engine stays on by default
 url: "http://example.com/test"
 rules: |
   RewriteEngine Maybe
@@ -8,7 +8,7 @@ serverVariables:
   SERVER_NAME: "example.com"
   HTTP_HOST: "example.com"
 expected:
-  outputUrl: "http://example.com/test"
+  outputUrl: "http://example.com/bar"
   statusCode: null
   trace:
     - line: "RewriteEngine Maybe"
@@ -16,6 +16,6 @@ expected:
       met: false
       valid: false
     - line: "RewriteRule ^test$ /bar [L]"
-      reached: false
-      met: false
+      reached: true
+      met: true
       valid: true

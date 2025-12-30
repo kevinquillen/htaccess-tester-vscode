@@ -177,6 +177,18 @@ button.secondary:hover {
   background-color: var(--vscode-list-hoverBackground);
 }
 
+.trace-table tr.row-not-met {
+  background-color: var(--vscode-inputValidation-errorBackground, rgba(255, 0, 0, 0.1));
+}
+
+.trace-table tr.row-not-reached {
+  opacity: 0.5;
+}
+
+.trace-table tr.row-invalid {
+  background-color: var(--vscode-inputValidation-errorBackground, rgba(255, 0, 0, 0.15));
+}
+
 .trace-table .status-icon {
   text-align: center;
   width: 40px;
