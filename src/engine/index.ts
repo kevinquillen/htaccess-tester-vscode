@@ -4,6 +4,7 @@
  */
 
 export * from './ast';
+export * from './parser';
 export * from '../shared/types';
 
 import { EngineInput, EngineOutput, EngineConfig, DEFAULT_ENGINE_CONFIG } from '../shared/types';
