@@ -1,0 +1,31 @@
+id: hyphen-noop
+description: Hyphen substitution means no change
+url: "http://example.com/page"
+rules: |
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^example\.com$
+  RewriteRule ^page$ - [L]
+  RewriteRule ^page$ /changed [L]
+serverVariables:
+  SERVER_NAME: "example.com"
+  HTTP_HOST: "example.com"
+expected:
+  outputUrl: "http://example.com/page"
+  statusCode: null
+  trace:
+    - line: "RewriteEngine On"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteCond %{HTTP_HOST} ^example\\.com$"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^page$ - [L]"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^page$ /changed [L]"
+      reached: false
+      met: false
+      valid: true

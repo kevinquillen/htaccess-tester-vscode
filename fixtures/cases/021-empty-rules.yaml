@@ -1,0 +1,11 @@
+id: empty-rules
+description: Empty htaccess - URL unchanged
+url: "http://example.com/page"
+rules: ""
+serverVariables:
+  SERVER_NAME: "example.com"
+  HTTP_HOST: "example.com"
+expected:
+  outputUrl: "http://example.com/page"
+  statusCode: null
+  trace: []

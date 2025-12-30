@@ -1,0 +1,27 @@
+id: force-https
+description: Force HTTPS redirect
+url: "http://example.com/page"
+rules: |
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+serverVariables:
+  SERVER_NAME: "example.com"
+  HTTP_HOST: "example.com"
+  HTTPS: "off"
+expected:
+  outputUrl: "https://example.com/page"
+  statusCode: 301
+  trace:
+    - line: "RewriteEngine On"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteCond %{HTTPS} off"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]"
+      reached: true
+      met: true
+      valid: true

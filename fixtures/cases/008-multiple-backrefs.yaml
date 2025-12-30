@@ -1,0 +1,21 @@
+id: multiple-backrefs
+description: Multiple backreferences $1 $2
+url: "http://example.com/category/electronics/product/42"
+rules: |
+  RewriteEngine On
+  RewriteRule ^category/([^/]+)/product/([0-9]+)$ /shop.php?cat=$1&id=$2 [L]
+serverVariables:
+  SERVER_NAME: "example.com"
+  HTTP_HOST: "example.com"
+expected:
+  outputUrl: "http://example.com/shop.php?cat=electronics&id=42"
+  statusCode: null
+  trace:
+    - line: "RewriteEngine On"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^category/([^/]+)/product/([0-9]+)$ /shop.php?cat=$1&id=$2 [L]"
+      reached: true
+      met: true
+      valid: true

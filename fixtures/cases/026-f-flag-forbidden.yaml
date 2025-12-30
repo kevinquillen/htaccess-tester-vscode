@@ -1,0 +1,21 @@
+id: f-flag-forbidden
+description: F flag returns 403 Forbidden
+url: "http://example.com/private"
+rules: |
+  RewriteEngine On
+  RewriteRule ^private$ - [F]
+serverVariables:
+  SERVER_NAME: "example.com"
+  HTTP_HOST: "example.com"
+expected:
+  outputUrl: "http://example.com/private"
+  statusCode: 403
+  trace:
+    - line: "RewriteEngine On"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^private$ - [F]"
+      reached: true
+      met: true
+      valid: true

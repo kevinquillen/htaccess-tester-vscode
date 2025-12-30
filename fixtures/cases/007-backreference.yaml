@@ -1,0 +1,21 @@
+id: backreference
+description: Rule backreference $1 substitution
+url: "http://example.com/product/123"
+rules: |
+  RewriteEngine On
+  RewriteRule ^product/([0-9]+)$ /item.php?id=$1 [L]
+serverVariables:
+  SERVER_NAME: "example.com"
+  HTTP_HOST: "example.com"
+expected:
+  outputUrl: "http://example.com/item.php?id=123"
+  statusCode: null
+  trace:
+    - line: "RewriteEngine On"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^product/([0-9]+)$ /item.php?id=$1 [L]"
+      reached: true
+      met: true
+      valid: true

@@ -1,0 +1,26 @@
+id: cond-host-check
+description: RewriteCond checking HTTP_HOST
+url: "http://www.example.com/page"
+rules: |
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^www\.example\.com$
+  RewriteRule ^(.*)$ http://example.com/$1 [R=301,L]
+serverVariables:
+  SERVER_NAME: "www.example.com"
+  HTTP_HOST: "www.example.com"
+expected:
+  outputUrl: "http://example.com/page"
+  statusCode: 301
+  trace:
+    - line: "RewriteEngine On"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteCond %{HTTP_HOST} ^www\\.example\\.com$"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^(.*)$ http://example.com/$1 [R=301,L]"
+      reached: true
+      met: true
+      valid: true

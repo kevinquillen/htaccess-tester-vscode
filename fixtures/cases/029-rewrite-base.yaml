@@ -1,0 +1,26 @@
+id: rewrite-base
+description: RewriteBase sets base path
+url: "http://example.com/app/page"
+rules: |
+  RewriteEngine On
+  RewriteBase /app/
+  RewriteRule ^page$ other [L]
+serverVariables:
+  SERVER_NAME: "example.com"
+  HTTP_HOST: "example.com"
+expected:
+  outputUrl: "http://example.com/app/other"
+  statusCode: null
+  trace:
+    - line: "RewriteEngine On"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteBase /app/"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^page$ other [L]"
+      reached: true
+      met: true
+      valid: true

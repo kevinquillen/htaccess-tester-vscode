@@ -1,0 +1,21 @@
+id: g-flag-gone
+description: G flag returns 410 Gone
+url: "http://example.com/deleted"
+rules: |
+  RewriteEngine On
+  RewriteRule ^deleted$ - [G]
+serverVariables:
+  SERVER_NAME: "example.com"
+  HTTP_HOST: "example.com"
+expected:
+  outputUrl: "http://example.com/deleted"
+  statusCode: 410
+  trace:
+    - line: "RewriteEngine On"
+      reached: true
+      met: true
+      valid: true
+    - line: "RewriteRule ^deleted$ - [G]"
+      reached: true
+      met: true
+      valid: true
